@@ -1,0 +1,84 @@
+	title  'CP/M-86 Loader'
+
+INCLUDE	platform.equ
+	cseg
+_entry:
+	mov	ax, cs
+	mov	ds, ax
+	mov	ss, ax
+	mov	sp, offset(stacktop)
+	mov	ax, seg_bios
+	mov	es, ax
+	mov	dl, es:machinetype
+	mov	bx, es:ramsize
+	mov	unusedramtopseg, bx
+	les	di, es:disklabelptr
+	mov	ax, es:CNF_FONT_sec[di]
+	or	ax, ax
+	jz	loadkeys
+	mov	sector,	ax
+	cmp	dl, 0		; if machine type is Xi
+	jz	xifont
+	add	sector,	10h
+	mov	sec_n, 9
+	sub	bx, 120h
+	mov	bufseg,	bx
+	jmp	loadfont
+
+xifont:
+	mov	bufseg,	80h
+	mov	sec_n, 10h
+
+loadfont:
+	call	read_disk
+	or	ax, ax
+	jnz	loadkeys
+	xor	ax, ax
+	mov	es, ax
+	mov	es:afontptroff,	ax
+	mov	es:mfontptroff,	ax
+	mov	ax, bufseg
+	mov	es:afontptrseg,	ax
+	mov	es:mfontptrseg,	ax
+	mov	unusedramtopseg, bx
+
+loadkeys:
+	xor	ax, ax
+	mov	es, ax
+	mov	bx, unusedramtopseg
+	les	di, es:disklabelptr
+	mov	ax, es:CNF_KEYS_sec[di]
+	or	ax, ax
+	jz	loadcpmhead
+	mov	sector,	ax
+	mov	sec_n, 2
+	sub	bx, 40h		; 2 sectors from the end of RAM
+	mov	bufseg,	bx
+	call	read_disk
+	or	ax, ax
+	jnz	loadcpmhead
+	xor	ax, ax
+	mov	es, ax
+	mov	es:keytabptroff, ax
+	mov	es:keytabptrseg, bx
+	mov	unusedramtopseg, bx
+
+read_disk:
+loadcpmhead:
+	nop
+	
+drviorec:
+drive_no	dw	0
+		dw	0
+sector		dw	0
+sec_n		dw	0
+		dw	0
+bufseg		dw	0
+unusedramtopseg	dw	0
+
+	org	0f30h
+	rw	32
+stacktop:
+	rw	32
+
+	end
