@@ -40,6 +40,9 @@ pristine: clean
 loader.hex: loader.cmd $(BIN2IHEX)
 	$(BIN2IHEX) -i $< -o $@
 
+new.hex: new.sys $(BIN2IHEX)
+	$(BIN2IHEX) -i $< -o $@
+
 new.sys: bdos.cmd ccp.cmd xios.cmd $(DPGEN)
 	$(DPGEN) base=F08
 
