@@ -8,7 +8,7 @@ cpmdataseg	equ	.000Ch
 cpmdataseg2	equ	.0006h
 
 seg_cpmcode	equ	0F08h
-seg_cpmalt	equ	0F08h
+seg_cpmalt	equ	0C18h
 
 ; seg cpmdata
 WORD_17998	equ	.0058h		; dw 010h

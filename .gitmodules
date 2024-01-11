@@ -1,0 +1,6 @@
+[submodule "emu2"]
+	path = emu2
+	url = https://github.com/dmsc/emu2.git
+[submodule "ihex"]
+	path = ihex
+	url = https://github.com/arkku/ihex.git
