@@ -4,3 +4,9 @@
 [submodule "ihex"]
 	path = ihex
 	url = https://github.com/arkku/ihex.git
+[submodule "tools/pyfat12"]
+	path = tools/pyfat12
+	url = https://github.com/hisahi/PyFAT12.git
+[submodule "tools/pyfat12.git"]
+	path = tools/pyfat12.git
+	url = https://github.com/hisahi/PyFAT12.git

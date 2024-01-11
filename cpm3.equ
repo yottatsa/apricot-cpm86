@@ -11,6 +11,9 @@ seg_cpmcode	equ	0F08h
 seg_cpmalt	equ	0C18h
 
 ; seg cpmdata
+; my_bcbs
 WORD_17998	equ	.0058h		; dw 010h
+; fs_track
 WORD_1799A	equ	.005Ah		; dw 01000h
+; dirdata??
 WORD_17C10	equ	.02D0h		; dw 0h

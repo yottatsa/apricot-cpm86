@@ -1,3 +1,5 @@
+; Pointer area
+
 seg_bios	equ	0h
 
 machinetype	equ	.0401h	
@@ -13,8 +15,8 @@ mfontptrseg	equ	.070Eh
 keytabptroff	equ	.0712h
 keytabptrseg	equ	.0714h
 
+; Apricot disk & O/S identification
 
+CNF_DOS_sec	equ	008Ah
 CNF_FONT_sec	equ	008Ch
 CNF_KEYS_sec	equ	008Eh
-CNF_DOS_sec	equ	008Ah
-

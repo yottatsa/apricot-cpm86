@@ -7,6 +7,8 @@
                                   ; reverse-engineered by Atsuko Ito <me@yottatsa.name>
 
 =                         INCLUDE platform.equ
+=                         ; Pointer area
+=
 =  0000                   seg_bios        equ     0h
 =
 =  0401                   machinetype     equ     .0401h  
@@ -22,11 +24,11 @@
 =  0712                   keytabptroff    equ     .0712h
 =  0714                   keytabptrseg    equ     .0714h
 =
+=                         ; Apricot disk & O/S identification
 =
+=  008A                   CNF_DOS_sec     equ     008Ah
 =  008C                   CNF_FONT_sec    equ     008Ch
 =  008E                   CNF_KEYS_sec    equ     008Eh
-=  008A                   CNF_DOS_sec     equ     008Ah
-=
 
 =                         INCLUDE cpm3.equ
 =  0F00                   seg_cpmhead     equ     0F00h
@@ -42,20 +44,23 @@
 =  0C18                   seg_cpmalt      equ     0C18h
 =
 =                         ; seg cpmdata
+=                         ; my_bcbs
 =  0058                   WORD_17998      equ     .0058h          ; dw 010h
+=                         ; fs_track
 =  005A                   WORD_1799A      equ     .005Ah          ; dw 01000h
+=                         ; dirdata??
 =  02D0                   WORD_17C10      equ     .02D0h          ; dw 0h
 
 
                                   cseg
+PC-DOS RASM-86 1.4a  Source: LOADER.A86    CP/M-86 Loader for Apricot F1                                     Page   2
+
+
 
                           ; ███████████████ S U B   R O U T I N E ███�
 
                           _entry:
  0000 8CC8                        mov     ax,             cs
-PC-DOS RASM-86 1.4a  Source: LOADER.A86    CP/M-86 Loader for Apricot F1                                     Page   2
-
-
  0002 8ED8                        mov     ds,             ax
  0004 8ED0                        mov     ss,             ax
  0006 BCDE03       R              mov     sp,             offset(stacktop)
@@ -103,14 +108,14 @@
  0087 0BC0                        or      ax,             ax
  0089 7428           00B3         jz      loadcpmhead
  008B A3D402       R              mov     ds:sector,      ax
+PC-DOS RASM-86 1.4a  Source: LOADER.A86    CP/M-86 Loader for Apricot F1                                     Page   3
+
+
  008E C706D6020200 R              mov     ds:sec_n,       2
  0094 83EB40                      sub     bx,             40h             ; 2 sectors from the end of RAM
  0097 891EDA02     R              mov     ds:bufseg,      bx
  009B E80202         02A0         call    read_disk
  009E 0BC0                        or      ax,             ax
-PC-DOS RASM-86 1.4a  Source: LOADER.A86    CP/M-86 Loader for Apricot F1                                     Page   3
-
-
  00A0 7511           00B3         jnz     loadcpmhead
  00A2 33C0                        xor     ax,             ax
  00A4 8EC0                        mov     es,             ax
@@ -158,14 +163,14 @@
                           fillfdds:
  0120 B8080F                      mov     ax,             seg_cpmcode
  0123 8EC0                        mov     es,             ax
+PC-DOS RASM-86 1.4a  Source: LOADER.A86    CP/M-86 Loader for Apricot F1                                     Page   4
+
+
  0125 26A10600                    mov     ax,             es:cpmdataseg2
  0129 8ED8                        mov     ds,             ax
  012B 33C0                        xor     ax,             ax
  012D 8EC0                        mov     es,             ax
  012F 26A11604                    mov     ax,             es:n_flphdd
-PC-DOS RASM-86 1.4a  Source: LOADER.A86    CP/M-86 Loader for Apricot F1                                     Page   4
-
-
  0133 84C0                        test    al,             al              ; if no floppies
  0135 7415           014C         jz      fillhdds
  0137 8B5C04                      mov     bx,             4[si]
@@ -213,14 +218,14 @@
  0191 7311           01A4         jnb     sethdd1
  0193 8B4C04                      mov     cx,             4[si]
  0196 894C02                      mov     2[si],  cx
+PC-DOS RASM-86 1.4a  Source: LOADER.A86    CP/M-86 Loader for Apricot F1                                     Page   5
+
+
  0199 8B4C06                      mov     cx,             6[si]
  019C 894C04                      mov     4[si],  cx
  019F C744060000                  mov     word ptr 6[si], 0
 
                           sethdd1:
-PC-DOS RASM-86 1.4a  Source: LOADER.A86    CP/M-86 Loader for Apricot F1                                     Page   5
-
-
  01A4 80FC01                      cmp     ah,             1               ; 1 or more hdds
  01A7 7310           01B9         jnb     setmem1
  01A9 8B4C02                      mov     cx,             2[si]
@@ -268,14 +273,14 @@
  020A E95900         0266         jmp     boot
                           ; ─────────────────────────�
 
+PC-DOS RASM-86 1.4a  Source: LOADER.A86    CP/M-86 Loader for Apricot F1                                     Page   6
+
+
                           setmem2:
  020D 33C0                        xor     ax,             ax              ; if CPM3.SYS >= 80s
  020F 8EC0                        mov     es,             ax
  0211 2E8B0EDC02   R              mov     cx,             cs:ramtop
  0216 268B162204                  mov     dx,             es:usercodearea
-PC-DOS RASM-86 1.4a  Source: LOADER.A86    CP/M-86 Loader for Apricot F1                                     Page   6
-
-
  021B BB5A00                      mov     bx,             5Ah
 
                           loc_3E29E:
@@ -323,12 +328,12 @@
  026A 33C0                        xor     ax,             ax
  026C 50                          push    ax
  026D CB                          retf
+PC-DOS RASM-86 1.4a  Source: LOADER.A86    CP/M-86 Loader for Apricot F1                                     Page   7
+
+
 
 
                           ; ███████████████ S U B   R O U T I N E ███�
-
-
-PC-DOS RASM-86 1.4a  Source: LOADER.A86    CP/M-86 Loader for Apricot F1                                     Page   7
 
 
                           ram2:
@@ -378,14 +383,14 @@
  02B6 2D0200                      sub     ax,             2
  02B9 BB4000                      mov     bx,             40h             ; DEV: HDD
  02BC B90500                      mov     cx,             5               ; COM: READ
+PC-DOS RASM-86 1.4a  Source: LOADER.A86    CP/M-86 Loader for Apricot F1                                     Page   8
+
+
 
                           loc_3E33F:
  02BF A3D002                      mov     ds:word_17C10,  ax
  02C2 8CDA                        mov     dx,             ds
  02C4 BED002       R              mov     si,             offset(drv_no)
-PC-DOS RASM-86 1.4a  Source: LOADER.A86    CP/M-86 Loader for Apricot F1                                     Page   8
-
-
  02C7 CDFC                        int     0FCh
  02C9 07                          pop     es
  02CA 59                          pop     cx
@@ -413,6 +418,4 @@
 
 End of assembly.  Number of errors:   0.  Use factor:  2%
 rec:
- 02D0 0000                drv_no  dw      0
- 02D2 0000                        dw      0
- 02D4 0
+ 02D0 

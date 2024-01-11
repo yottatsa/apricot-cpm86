@@ -18,6 +18,7 @@ EXE2CMD = ./exe2cmd
 TOOLS	= $(BIN2IHEX) $(EMU2) $(RUNTIME) $(RASM86) $(LINKCMD) $(LINKEXE) $(DPGEN) $(EXE2CMD) cmdio.o dpgen.o
 
 all: loader.cmd new.sys
+	@ls -l $^
 
 clean:
 	rm -f loader.cmd loader.obg new.sys bdos33.exe $(BDOSOBJS) $(BDOSOBJS:.obj=.lst) $(BDOSOBJS:.obj=.sym) $(TOOLS)
