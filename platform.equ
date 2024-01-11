@@ -3,6 +3,9 @@ seg_bios	equ	0h
 machinetype	equ	.0401h	
 ramsize		equ	.0402h
 disklabelptr	equ	.040Ah
+bootfrom	equ	.0408h
+n_flphdd	equ	.0416h
+usercodearea	equ	.0422h
 afontptroff	equ	.0706h
 afontptrseg	equ	.0708h
 mfontptroff	equ	.070Ch
@@ -10,6 +13,8 @@ mfontptrseg	equ	.070Eh
 keytabptroff	equ	.0712h
 keytabptrseg	equ	.0714h
 
+
 CNF_FONT_sec	equ	008Ch
 CNF_KEYS_sec	equ	008Eh
+CNF_DOS_sec	equ	008Ah
 

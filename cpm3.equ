@@ -1,0 +1,16 @@
+seg_cpmhead	equ	0F00h
+
+cpmcodesize	equ	.0001h
+cpmcodeseg	equ	.0003h
+cpmdatasize	equ	.000Ah
+cpmdataseg	equ	.000Ch
+
+cpmdataseg2	equ	.0006h
+
+seg_cpmcode	equ	0F08h
+seg_cpmalt	equ	0F08h
+
+; seg cpmdata
+WORD_17998	equ	.0058h		; dw 010h
+WORD_1799A	equ	.005Ah		; dw 01000h
+WORD_17C10	equ	.02D0h		; dw 0h
