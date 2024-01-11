@@ -1,5 +1,6 @@
 	title  'CP/M-86 Loader for Apricot F1'
-	; LOADER.SYS from http://actapricot.org/disks/aprid5ks.htm#apr00301.dsk
+	; LOADER   SYS      1408 1985-02-11  18:05
+	; from http://actapricot.org/disks/aprid5ks.htm#apr00301.dsk
 	; reverse-engineered by Atsuko Ito <me@yottatsa.name>
 
 INCLUDE	platform.equ
