@@ -4,5 +4,8 @@ Generic BIOS for the ACT Apricot V1.1 January 17th 1985
 Personal CP/M-86 Version 3.1 (10/18/83)
 Copyright (C) 1983, Digital Research
 
+Convert the Personal CP/M-86 BDOS (compiled as a small-model EXE) to CMD.
+Copyright (C) 2003, 2007  John Elliott <jce@seasip.demon.co.uk>
+
 Derivative work based on fair use and right of repair
 CC-BY-SA-4.0

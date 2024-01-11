@@ -2,6 +2,8 @@ linkcmd.exe
 rasm86.exe
 tools86.zip
 dos86pr2.zip
+bdos33.zip
 *.cmd
 *.obj
 *.sym
+*.lst
