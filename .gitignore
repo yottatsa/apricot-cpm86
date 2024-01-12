@@ -1,3 +1,5 @@
+*.swp
+
 linkcmd.exe
 rasm86.exe
 tools86.zip
@@ -7,3 +9,5 @@ bdos33.zip
 *.obj
 *.sym
 *.lst
+oloader.hex
+cpm3.hex

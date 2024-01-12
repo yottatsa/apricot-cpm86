@@ -21,7 +21,7 @@ all: loader.cmd new.sys
 	@ls -l $^
 
 clean:
-	rm -f loader.cmd loader.obg new.sys bdos33.exe $(BDOSOBJS) $(BDOSOBJS:.obj=.lst) $(BDOSOBJS:.obj=.sym) $(TOOLS)
+	rm -f loader.hex loader.cmd loader.obg new.hex new.sys bdos33.exe $(BDOSOBJS) $(BDOSOBJS:.obj=.lst) $(BDOSOBJS:.obj=.sym) $(TOOLS)
 
 pristine: clean
 	rm -f $(BDOSFILES)

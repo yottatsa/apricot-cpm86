@@ -75,6 +75,7 @@ loadcpmhead:
 	xor	ax,		ax
 	mov	es,		ax
 	les	di,		es:disklabelptr
+	; assume es: disklabel structure
 	mov	ax,		es:CNF_DOS_sec[di]
 	mov	ds:sector,	ax
 	mov	ds:bufseg,	seg_cpmhead
@@ -85,11 +86,13 @@ loadcpmhead:
 	xor	ax,		ax
 	mov	es,		ax
 	les	di,		es:disklabelptr
+	; assume es: disklabel structure
 	mov	ax,		es:CNF_DOS_sec[di]
 	mov	ds:sector,	ax
 	mov	ds:bufseg,	seg_cpmhead
 	mov	ax,		seg_cpmhead
 	mov	es,		ax
+	; assume es: cpm3.sys header
 	mov	ax,		es:cpmcodesize
 	add	ax,		es:cpmdatasize
 	shr	ax,		1
@@ -105,13 +108,14 @@ loadcpmhead:
 	jz	$+2				; delay	after reading the disk
 	mov	si,		seg_cpmcode
 	cmp	ds:sec_n,	80h
-	jb	fillfdds			; si=0C18h if CPM3.SYS > 80 sectors
-	mov	si,		seg_cpmalt
+	jb	fillfdds
+	mov	si,		0C18h		; if CPM3.SYS > 80 sectors, not a case
 
 fillfdds:
 	mov	ax,		seg_cpmcode
 	mov	es,		ax
-	mov	ax,		es:cpmdataseg2
+	; assume es: cpm3.sys cseg
+	mov	ax,		es:bdos_dseg
 	mov	ds,		ax
 	xor	ax,		ax
 	mov	es,		ax

@@ -9,7 +9,9 @@ to build `BDOS` and `LOADER`
 ## TODO
 
 ### what FS is needed for this 
-Currently the system is booting but `dir` doesn't work. Original disk uses FAT12, I'm also trying CP/M filesystem.
+~~Currently the system is booting but `dir` doesn't work. Original disk uses FAT12, I'm also trying CP/M filesystem.~~
+
+On Apricot F1, it works with FAT12. However, you need to go to drive `C:`.
 
 ### figure out if it's bootable on Xi
 Apricot PC/Xi shows Error 99 (disc is not bootable) straight away.
