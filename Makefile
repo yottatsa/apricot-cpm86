@@ -20,6 +20,9 @@ TOOLS	= $(BIN2IHEX) $(EMU2) $(RUNTIME) $(RASM86) $(LINKCMD) $(LINKEXE) $(DPGEN) 
 all: loader.cmd new.sys
 	@ls -l $^
 
+tags: loader.a86 platform.equ cpm3.equ $(BDOSFILES)
+	ctags --languages=+Asm  --map-Asm=+.a86  --map-Asm=+.equ $^
+
 clean:
 	rm -f loader.hex loader.cmd loader.obg new.hex new.sys bdos33.exe $(BDOSOBJS) $(BDOSOBJS:.obj=.lst) $(BDOSOBJS:.obj=.sym) $(TOOLS)
 
