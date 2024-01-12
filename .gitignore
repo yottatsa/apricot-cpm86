@@ -5,6 +5,7 @@ rasm86.exe
 tools86.zip
 dos86pr2.zip
 bdos33.zip
+dpgen.zip
 *.cmd
 *.obj
 *.sym

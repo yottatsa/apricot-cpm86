@@ -1,3 +1,4 @@
+LOADERFILES =	loader.a86 platform.equ cpm.equ sys.equ
 BDOSFILES = 	bdos.a86  equates.a86  mem.a86   system.a86 \
 		serial.a86    exe2cmd.c    misc.a86  proctbl.a86 \
 		ccp.cmd    rtm.a86 \
@@ -13,7 +14,7 @@ ifdef BUILDXIOS
 XIOSFILES +=	aprixios.a86
 XIOSOBJS +=	aprixios.obj
 else
-BDOSFILES =+	xios.cmd
+BDOSFILES +=	xios.cmd
 endif
 
 BIN2IHEX = ./ihex/bin2ihex
@@ -26,10 +27,10 @@ DPGEN	= ./dpgen
 EXE2CMD = ./exe2cmd
 
 # cleaning-related
-_TOOLS	= $(BIN2IHEX) $(EMU2) $(RUNTIME) $(RASM86) $(LINKCMD) $(LINKEXE) $(DPGEN) $(EXE2CMD) cmdio.o dpgen.o
+_TOOLS	= $(BIN2IHEX) $(EMU2) $(RUNTIME) $(RASM86) $(LINKCMD) $(LINKEXE) $(DPGEN) $(EXE2CMD) cmdio.o dpgen.o sys.tmp
 _XIOSFILES =	$(XIOSFILES) aprixios.a86
 _XIOSOBJS =	aprixios.obj
-_BDOSDILES =	$(BDOSFILES) xios.cmd
+_BDOSFILES =	$(BDOSFILES) xios.cmd
 _BDOS	= new.hex new.sys bdos33.exe $(BDOSOBJS) $(BDOSOBJS:.obj=.lst) $(BDOSOBJS:.obj=.sym)
 _XIOS	= xios.hex xios.cmd aprixios.cmd $(_XIOSOBJS) $(_XIOSOBJS:.obj=.lst) $(_XIOSOBJS:.obj=.sym)
 
@@ -37,7 +38,7 @@ _XIOS	= xios.hex xios.cmd aprixios.cmd $(_XIOSOBJS) $(_XIOSOBJS:.obj=.lst) $(_XI
 all: loader.cmd new.sys
 	@ls -l $^
 
-tags: loader.a86 platform.equ cpm3.equ $(BDOSFILES)
+tags: $(LOADERFILES) $(BDOSFILES) $(XIOSFILES)
 	ctags --languages=+Asm  --map-Asm=+.a86  --map-Asm=+.equ $^
 
 clean-xios:
@@ -70,8 +71,8 @@ new.hex: new.sys $(BIN2IHEX)
 xios.hex: xios.cmd $(BIN2IHEX)
 	$(BIN2IHEX) -i $< -o $@
 
-new.sys: bdos.cmd ccp.cmd xios.cmd $(DPGEN)
-	$(DPGEN) 0x0F08 0x1794
+new.sys: bdos.cmd ccp.cmd xios.cmd $(DPGEN) sys.tmp
+	$(DPGEN) `hexdump -e '"0x""%04x""\n"' -n2 -s0 sys.tmp` `hexdump -e '"0x""%04x""\n"' -n2 -s2 sys.tmp`
 
 bdos.cmd:	bdos33.exe $(EXE2CMD)
 	$(EXE2CMD) bdos33.exe bdos.cmd base=F08
@@ -83,6 +84,9 @@ endif
 
 bdos33.exe: bdos33ex.inp $(BDOSOBJS) $(XIOSOBJS) $(LINKEXE)
 	$(LINKEXE) bdos33ex[i
+
+sys.tmp: sys.S | sys.equ
+	nasm -o $@ $<
 
 ## sources
 
@@ -119,7 +123,7 @@ $(XIOSFILES): dpgen.zip
 
 ## dependencies
 
-loader.obj:	loader.a86 platform.equ cpm3.equ
+loader.obj:	loader.a86 platform.equ cpm.equ sys.equ
 bdos.obj:	bdos.a86 equates.a86 system.a86
 cio.obj:	cio.a86 equates.a86 system.a86
 entry.obj:	entry.a86 equates.a86 system.a86
@@ -132,4 +136,4 @@ sup.obj:	sup.a86 equates.a86
 
 dpgen.o:	dpgen.c | cmdio.h
 cmdio.o:	cmdio.c | cmdio.h
-$(DPGEN):	dpgen.o cmdio.o
+$(DPGEN):	dpgen.o cmdio.o 

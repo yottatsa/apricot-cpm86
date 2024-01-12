@@ -4,7 +4,8 @@
 	; reverse-engineered by Atsuko Ito <me@yottatsa.name>
 
 INCLUDE	platform.equ
-INCLUDE	cpm3.equ
+INCLUDE	cpm.equ
+INCLUDE	sys.equ
 
 	cseg
 

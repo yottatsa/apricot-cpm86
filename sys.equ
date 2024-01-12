@@ -1,0 +1,4 @@
+seg_cpmhead	equ	0F00h
+seg_cpmcode	equ	0F08h		; used in dpgen.c, loader.a86
+seg_cpmdata	equ	1794h		; used in dpgen.c and aprixios.a86
+

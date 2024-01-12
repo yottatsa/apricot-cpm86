@@ -1,6 +1,3 @@
-seg_cpmhead	equ	0F00h
-seg_cpmcode	equ	0F08h
-
 ; cpm cmd file header offsets
 
 cpmcodesize	equ	.0001h

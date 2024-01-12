@@ -30,10 +30,7 @@
 =  008C                   CNF_FONT_sec    equ     008Ch
 =  008E                   CNF_KEYS_sec    equ     008Eh
 
-=                         INCLUDE cpm3.equ
-=  0F00                   seg_cpmhead     equ     0F00h
-=  0F08                   seg_cpmcode     equ     0F08h
-=
+=                         INCLUDE cpm.equ
 =                         ; cpm cmd file header offsets
 =
 =  0001                   cpmcodesize     equ     .0001h
@@ -49,13 +46,19 @@
 =  005A                   WORD_1799A      equ     .005Ah          ; dw 01000h
 =  02D0                   WORD_17C10      equ     .02D0h          ; dw 0h
 
+=                         INCLUDE sys.equ
+=  0F00                   seg_cpmhead     equ     0F00h
+=  0F08                   seg_cpmcode     equ     0F08h           ; used in dpgen.c, loader.a86
+=  1794                   seg_cpmdata     equ     1794h           ; used in dpgen.c and aprixios.a86
+=
+
+
+PC-DOS RASM-86 1.4a  Source: LOADER.A86    CP/M-86 Loader for Apricot F1                                     Page   2
+
 
                                   cseg
 
                           ; ███████████████ S U B   R O U T I N E ███�
-PC-DOS RASM-86 1.4a  Source: LOADER.A86    CP/M-86 Loader for Apricot F1                                     Page   2
-
-
 
                           _entry:
  0000 8CC8                        mov     ax,             cs
@@ -105,12 +108,12 @@
  0082 268B858E00                  mov     ax,             es:CNF_KEYS_sec[di]
  0087 0BC0                        or      ax,             ax
  0089 7428           00B3         jz      loadcpmhead
- 008B A3D402       R              mov     ds:sector,      ax
- 008E C706D6020200 R              mov     ds:sec_n,       2
- 0094 83EB40                      sub     bx,             40h             ; 2 sectors from the end of RAM
 PC-DOS RASM-86 1.4a  Source: LOADER.A86    CP/M-86 Loader for Apricot F1                                     Page   3
 
 
+ 008B A3D402       R              mov     ds:sector,      ax
+ 008E C706D6020200 R              mov     ds:sec_n,       2
+ 0094 83EB40                      sub     bx,             40h             ; 2 sectors from the end of RAM
  0097 891EDA02     R              mov     ds:bufseg,      bx
  009B E80202         02A0         call    read_disk
  009E 0BC0                        or      ax,             ax
@@ -160,12 +163,12 @@
  0115 813ED6028000 R              cmp     ds:sec_n,       80h
  011B 7203           0120         jb      fillfdds
  011D BE180C                      mov     si,             0C18h           ; if CPM3.SYS > 80 sectors, not a case
-
-                          fillfdds:
- 0120 B8080F                      mov     ax,             seg_cpmcode
 PC-DOS RASM-86 1.4a  Source: LOADER.A86    CP/M-86 Loader for Apricot F1                                     Page   4
 
 
+
+                          fillfdds:
+ 0120 B8080F                      mov     ax,             seg_cpmcode
  0123 8EC0                        mov     es,             ax
                                   ; assume es: cpm3.sys cseg
  0125 26A10600                    mov     ax,             es:bdos_dseg
@@ -215,12 +218,12 @@
  0187 7305           018E         jnb     sethdd2
  0189 C744040000                  mov     word ptr 4[si], 0
 
-                          sethdd2:
- 018E 80FC02                      cmp     ah,             2               ; 2 or more hdds
- 0191 7311           01A4         jnb     sethdd1
 PC-DOS RASM-86 1.4a  Source: LOADER.A86    CP/M-86 Loader for Apricot F1                                     Page   5
 
 
+                          sethdd2:
+ 018E 80FC02                      cmp     ah,             2               ; 2 or more hdds
+ 0191 7311           01A4         jnb     sethdd1
  0193 8B4C04                      mov     cx,             4[si]
  0196 894C02                      mov     2[si],  cx
  0199 8B4C06                      mov     cx,             6[si]
@@ -270,12 +273,12 @@
  01F8 C7040000                    mov     word ptr [si],  0
  01FC C744020000                  mov     word ptr 2[si], 0
  0201 C64404FF                    mov     byte ptr 4[si], 0FFh
- 0205 83C606                      add     si,             6
- 0208 E2EE           01F8         loop    loc_3E278
- 020A E95900         0266         jmp     boot
 PC-DOS RASM-86 1.4a  Source: LOADER.A86    CP/M-86 Loader for Apricot F1                                     Page   6
 
 
+ 0205 83C606                      add     si,             6
+ 0208 E2EE           01F8         loop    loc_3E278
+ 020A E95900         0266         jmp     boot
                           ; ─────────────────────────�
 
                           setmem2:
@@ -325,12 +328,12 @@
  0264 8905                        mov     [di],           ax
 
                           boot:   
- 0266 B8080F                      mov     ax,             seg_cpmcode
- 0269 50                          push    ax
- 026A 33C0                        xor     ax,             ax
 PC-DOS RASM-86 1.4a  Source: LOADER.A86    CP/M-86 Loader for Apricot F1                                     Page   7
 
 
+ 0266 B8080F                      mov     ax,             seg_cpmcode
+ 0269 50                          push    ax
+ 026A 33C0                        xor     ax,             ax
  026C 50                          push    ax
  026D CB                          retf
 
@@ -380,12 +383,12 @@
  02A9 33C0                        xor     ax,             ax
  02AB 8EC0                        mov     es,             ax
  02AD 26A10804                    mov     ax,             es:bootfrom
- 02B1 3D0200                      cmp     ax,             2               ; if boot from id>=2, means hdd
- 02B4 7209           02BF         jb      loc_3E33F
- 02B6 2D0200                      sub     ax,             2
 PC-DOS RASM-86 1.4a  Source: LOADER.A86    CP/M-86 Loader for Apricot F1                                     Page   8
 
 
+ 02B1 3D0200                      cmp     ax,             2               ; if boot from id>=2, means hdd
+ 02B4 7209           02BF         jb      loc_3E33F
+ 02B6 2D0200                      sub     ax,             2
  02B9 BB4000                      mov     bx,             40h             ; DEV: HDD
  02BC B90500                      mov     cx,             5               ; COM: READ
 
@@ -420,5 +423,4 @@
 
 End of assembly.  Number of errors:   0.  Use factor:  2%
 rec:
- 02D0 0000                drv_no  dw      0
- 02D2 0000                        dw  
+ 02D0 0000               
