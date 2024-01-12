@@ -27,7 +27,7 @@ EXE2CMD = ./exe2cmd
 
 # cleaning-related
 _TOOLS	= $(BIN2IHEX) $(EMU2) $(RUNTIME) $(RASM86) $(LINKCMD) $(LINKEXE) $(DPGEN) $(EXE2CMD) cmdio.o dpgen.o
-_XIOSFILES =	aprixios.a86
+_XIOSFILES =	$(XIOSFILES) aprixios.a86
 _XIOSOBJS =	aprixios.obj
 _BDOSDILES =	$(BDOSFILES) xios.cmd
 _BDOS	= new.hex new.sys bdos33.exe $(BDOSOBJS) $(BDOSOBJS:.obj=.lst) $(BDOSOBJS:.obj=.sym)
@@ -71,7 +71,7 @@ xios.hex: xios.cmd $(BIN2IHEX)
 	$(BIN2IHEX) -i $< -o $@
 
 new.sys: bdos.cmd ccp.cmd xios.cmd $(DPGEN)
-	$(DPGEN) dpgen 0x0F08 0xC000
+	$(DPGEN) 0x0F08 0x1794
 
 bdos.cmd:	bdos33.exe $(EXE2CMD)
 	$(EXE2CMD) bdos33.exe bdos.cmd base=F08
