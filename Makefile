@@ -1,18 +1,17 @@
-BDOSFILES = 	bdos.a86  cmdio.c    equates.a86  mem.a86   system.a86 \
-		serial.a86 cmdio.h    exe2cmd.c    misc.a86  proctbl.a86 \
-		ccp.cmd    dpgen.c      rtm.a86 \
+BDOSFILES = 	bdos.a86  equates.a86  mem.a86   system.a86 \
+		serial.a86    exe2cmd.c    misc.a86  proctbl.a86 \
+		ccp.cmd    rtm.a86 \
 		cio.a86   entry.a86  sup.a86   bdos33ex.inp \
 		ccpldr.a86
 BDOSOBJS =	entry.obj sup.obj rtm.obj mem.obj cio.obj misc.obj bdos.obj \
 		ccpldr.obj proctbl.obj
 
-_XIOSFILES =	aprixios.a86
-_XIOSOBJS =	aprixios.obj
-_BDOSDILES =	$(BDOSFILES) xios.cmd
+XIOSFILES =	dpgen.c cmdio.c cmdio.h
+XIOSOBJS =
 
 ifdef BUILDXIOS
-XIOSFILES =	$(_XIOSFILES)
-XIOSOBJS =	$(_XIOSOBJS)
+XIOSFILES +=	aprixios.a86
+XIOSOBJS +=	aprixios.obj
 else
 BDOSFILES =+	xios.cmd
 endif
@@ -28,8 +27,11 @@ EXE2CMD = ./exe2cmd
 
 # cleaning-related
 _TOOLS	= $(BIN2IHEX) $(EMU2) $(RUNTIME) $(RASM86) $(LINKCMD) $(LINKEXE) $(DPGEN) $(EXE2CMD) cmdio.o dpgen.o
+_XIOSFILES =	aprixios.a86
+_XIOSOBJS =	aprixios.obj
+_BDOSDILES =	$(BDOSFILES) xios.cmd
 _BDOS	= new.hex new.sys bdos33.exe $(BDOSOBJS) $(BDOSOBJS:.obj=.lst) $(BDOSOBJS:.obj=.sym)
-_XIOS	= xios.hex xios.cmd $(_XIOSOBJS) $(_XIOSOBJS:.obj=.lst) $(_XIOSOBJS:.obj=.sym)
+_XIOS	= xios.hex xios.cmd aprixios.cmd $(_XIOSOBJS) $(_XIOSOBJS:.obj=.lst) $(_XIOSOBJS:.obj=.sym)
 
 
 all: loader.cmd new.sys
@@ -69,7 +71,7 @@ xios.hex: xios.cmd $(BIN2IHEX)
 	$(BIN2IHEX) -i $< -o $@
 
 new.sys: bdos.cmd ccp.cmd xios.cmd $(DPGEN)
-	$(DPGEN) base=F08
+	$(DPGEN) dpgen 0x0F08 0xC000
 
 bdos.cmd:	bdos33.exe $(EXE2CMD)
 	$(EXE2CMD) bdos33.exe bdos.cmd base=F08
@@ -79,7 +81,7 @@ xios.cmd:	aprixios.cmd
 	cp $< $@
 endif
 
-bdos33.exe: bdos33ex.inp $(BDOSOBJS) $(LINKEXE)
+bdos33.exe: bdos33ex.inp $(BDOSOBJS) $(XIOSOBJS) $(LINKEXE)
 	$(LINKEXE) bdos33ex[i
 
 ## sources
