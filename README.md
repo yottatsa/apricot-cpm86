@@ -6,6 +6,16 @@ to build `BDOS` and `LOADER`
     -rw-r--r--  1 yottatsa  staff   1408 11 Jan 23:41 loader.cmd
     -rw-r--r--  1 yottatsa  staff  61184 11 Jan 23:41 new.sys
 
+to build `XIOS` from sources (or rebuild only xios part)
+
+    $ make BUILDXIOS=1 [ clean-xios all ] 
+
+## Sources
+
+* [`bdos33.zip`](http://www.cpm.z80.de/download/bdos33.zip) from [Digital Research Source Code](http://www.cpm.z80.de/source.html)
+* `aprixios.a86` in [`dpgen.zip`](http://www.seasip.info/Cpm/software/dpgen.zip) from [DOS Plus v1.x eXtended Input/Output system](http://www.seasip.info/Cpm/dosplus_xios.html)
+* `loader.sys` from `apr00301.dsk`
+
 ## TODO
 
 ### what FS is needed for this 

@@ -1,11 +1,21 @@
 BDOSFILES = 	bdos.a86  cmdio.c    equates.a86  mem.a86   system.a86 \
 		serial.a86 cmdio.h    exe2cmd.c    misc.a86  proctbl.a86 \
-		xios.cmd  ccp.cmd    dpgen.c      rtm.a86 \
+		ccp.cmd    dpgen.c      rtm.a86 \
 		cio.a86   entry.a86  sup.a86   bdos33ex.inp \
 		ccpldr.a86
 BDOSOBJS =	entry.obj sup.obj rtm.obj mem.obj cio.obj misc.obj bdos.obj \
 		ccpldr.obj proctbl.obj
 
+_XIOSFILES =	aprixios.a86
+_XIOSOBJS =	aprixios.obj
+_BDOSDILES =	$(BDOSFILES) xios.cmd
+
+ifdef BUILDXIOS
+XIOSFILES =	$(_XIOSFILES)
+XIOSOBJS =	$(_XIOSOBJS)
+else
+BDOSFILES =+	xios.cmd
+endif
 
 BIN2IHEX = ./ihex/bin2ihex
 EMU2	= ./emu2/emu2
@@ -15,7 +25,12 @@ LINKCMD	= $(RUNTIME) linkcmd.exe
 LINKEXE	= $(RUNTIME) linkexe.exe
 DPGEN	= ./dpgen
 EXE2CMD = ./exe2cmd
-TOOLS	= $(BIN2IHEX) $(EMU2) $(RUNTIME) $(RASM86) $(LINKCMD) $(LINKEXE) $(DPGEN) $(EXE2CMD) cmdio.o dpgen.o
+
+# cleaning-related
+_TOOLS	= $(BIN2IHEX) $(EMU2) $(RUNTIME) $(RASM86) $(LINKCMD) $(LINKEXE) $(DPGEN) $(EXE2CMD) cmdio.o dpgen.o
+_BDOS	= new.hex new.sys bdos33.exe $(BDOSOBJS) $(BDOSOBJS:.obj=.lst) $(BDOSOBJS:.obj=.sym)
+_XIOS	= xios.hex xios.cmd $(_XIOSOBJS) $(_XIOSOBJS:.obj=.lst) $(_XIOSOBJS:.obj=.sym)
+
 
 all: loader.cmd new.sys
 	@ls -l $^
@@ -23,13 +38,16 @@ all: loader.cmd new.sys
 tags: loader.a86 platform.equ cpm3.equ $(BDOSFILES)
 	ctags --languages=+Asm  --map-Asm=+.a86  --map-Asm=+.equ $^
 
+clean-xios:
+	rm -f $(_XIOS)
+
 clean:
-	rm -f loader.hex loader.cmd loader.obg new.hex new.sys bdos33.exe $(BDOSOBJS) $(BDOSOBJS:.obj=.lst) $(BDOSOBJS:.obj=.sym) $(TOOLS)
+	rm -f loader.hex loader.cmd loader.obg $(_BDOS) $(_XIOS) $(_TOOLS)
 
 pristine: clean
-	rm -f $(BDOSFILES)
+	rm -f $(_BDOSFILES) $(_XIOSFILES)
 
-.PHONY:	all
+.PHONY:	all clean pristine
 
 ## generic rules
 
@@ -47,17 +65,22 @@ loader.hex: loader.cmd $(BIN2IHEX)
 new.hex: new.sys $(BIN2IHEX)
 	$(BIN2IHEX) -i $< -o $@
 
+xios.hex: xios.cmd $(BIN2IHEX)
+	$(BIN2IHEX) -i $< -o $@
+
 new.sys: bdos.cmd ccp.cmd xios.cmd $(DPGEN)
 	$(DPGEN) base=F08
 
 bdos.cmd:	bdos33.exe $(EXE2CMD)
 	$(EXE2CMD) bdos33.exe bdos.cmd base=F08
+	
+ifdef BUILDXIOS
+xios.cmd:	aprixios.cmd
+	cp $< $@
+endif
 
 bdos33.exe: bdos33ex.inp $(BDOSOBJS) $(LINKEXE)
 	$(LINKEXE) bdos33ex[i
-
-exe2cmd.exe:	exe2cmd.c
-	pacc -Bs $<
 
 ## sources
 
@@ -77,6 +100,9 @@ bdos33.zip:
 	wget -O $@ http://www.cpm.z80.de/download/bdos33.zip
 	touch $@
 
+dpgen.zip:
+	wget -O $@ http://www.seasip.info/Cpm/software/dpgen.zip
+
 dos86pr2.zip: tools86.zip
 	unzip -DD -L $^ $@
 
@@ -84,6 +110,9 @@ rasm86.exe linkcmd.exe linkexe.exe: dos86pr2.zip
 	unzip -DD -L $^ $@
 
 $(BDOSFILES): bdos33.zip
+	unzip -DD -L $^ $@
+
+$(XIOSFILES): dpgen.zip
 	unzip -DD -L $^ $@
 
 ## dependencies
