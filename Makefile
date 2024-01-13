@@ -85,7 +85,7 @@ endif
 bdos33.exe: bdos33ex.inp $(BDOSOBJS) $(XIOSOBJS) $(LINKEXE)
 	$(LINKEXE) bdos33ex[i
 
-sys.tmp: sys.S | sys.equ
+sys.tmp: sys.S sys.equ
 	nasm -o $@ $<
 
 ## sources

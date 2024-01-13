@@ -14,7 +14,7 @@ to build `XIOS` from sources (or rebuild only xios part)
 
 * [`bdos33.zip`](http://www.cpm.z80.de/download/bdos33.zip) from [Digital Research Source Code](http://www.cpm.z80.de/source.html)
 * `aprixios.a86` in [`dpgen.zip`](http://www.seasip.info/Cpm/software/dpgen.zip) from [DOS Plus v1.x eXtended Input/Output system](http://www.seasip.info/Cpm/dosplus_xios.html)
-* `loader.sys` from `apr00301.dsk`
+* [Apricot disks](http://actapricot.org/disks/aprididx.htm)
 
 ## TODO
 
@@ -25,6 +25,7 @@ On Apricot F1, it works with FAT12. However, you need to go to drive `C:`.
 
 ### figure out if it's bootable on Xi
 Apricot PC/Xi shows Error 99 (disc is not bootable) straight away.
+Managed to build somehow bootable disk with the CP/M instead of MS-DOS by patching `apr00013.dsk`, only to find that `int FCh` is not available in ROM BIOS. 
 
 ### annotate leftovers
 * [`cpm3.equ`](https://github.com/yottatsa/apricot-cpm86/blob/main/cpm3.equ#L14-L16)
