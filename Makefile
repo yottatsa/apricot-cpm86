@@ -72,7 +72,8 @@ xios.hex: xios.cmd $(BIN2IHEX)
 	$(BIN2IHEX) -i $< -o $@
 
 new.sys: bdos.cmd ccp.cmd xios.cmd $(DPGEN) sys.tmp
-	$(DPGEN) `hexdump -e '"0x""%04x""\n"' -n2 -s0 sys.tmp` `hexdump -e '"0x""%04x""\n"' -n2 -s2 sys.tmp`
+	$(DPGEN) 0x0F08 0xC000
+#	$(DPGEN) `hexdump -e '"0x""%04x""\n"' -n2 -s0 sys.tmp` `hexdump -e '"0x""%04x""\n"' -n2 -s2 sys.tmp`
 
 bdos.cmd:	bdos33.exe $(EXE2CMD)
 	$(EXE2CMD) bdos33.exe bdos.cmd base=F08

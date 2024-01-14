@@ -1,0 +1,19 @@
+# Booting PCP/M-86 on Apricot Xi
+
+In comparison to F-series that provides 0xFC API from its boot ROM, Xi relies on RAM BIOS to provide this or similar API for the operating system.
+
+As one of the approaches, I'm studiyng existing _BIOS for the ACT Apricot V1.5 March 1st 1984_ for _CP/M-86 Plus Version 3.1 (10/18/83)_. It ships with the same `ccp.cmd` as for the F1.
+
+It loads first 120 sectors of the floppy in `0x7d80`, and jumps to `0xd000`. To make sense of it, files were obtained with `cpmtools` using `ibm3` format. Read is verified by cross-checking the files.
+
+Here is itemised dump of this boot area with the offsets from the beginning of the RAM and the beginning of the disk.
+
+```
+[0x09f80:0x0c780] [0x2200:0x4a00] (0x2800) from font.sys:0x0
+[0x0c780:0x0cf80] [0x4a00:0x5200] (0x800) from keytab.sys:0x0
+[0x0cf80:0x16800] [0x5200:0xea80] (0x9880) from cpm3.sys:0x0 (full)
+^^^ boots from 0x5280 or cpm3.sys:0x5a80, xios code segment
+[0x12de6:0x14060] [0xb066:0xc2e0] (0x127a) from ccp.cmd:0x76
+[0x1406b:0x148d0] [0xc2eb:0xcb50] (0x865) from ccp.cmd:0x12fb
+[0x15680:0x157d0] [0xd900:0xda50] (0x150) from ccp.cmd:0xe10
+```
