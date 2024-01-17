@@ -15,6 +15,7 @@ to build `XIOS` from sources (or rebuild only xios part)
 * [`bdos33.zip`](http://www.cpm.z80.de/download/bdos33.zip) from [Digital Research Source Code](http://www.cpm.z80.de/source.html)
 * `aprixios.a86` in [`dpgen.zip`](http://www.seasip.info/Cpm/software/dpgen.zip) from [DOS Plus v1.x eXtended Input/Output system](http://www.seasip.info/Cpm/dosplus_xios.html)
 * [Apricot disks](http://actapricot.org/disks/aprididx.htm)
+  - [Apricot F1E Dr.Logo](http://actapricot.org/disks/aprid5ks.htm#apr00301.dsk)
 
 ## TODO
 
@@ -22,10 +23,12 @@ to build `XIOS` from sources (or rebuild only xios part)
 ~~Currently the system is booting but `dir` doesn't work. Original disk uses FAT12, I'm also trying CP/M filesystem.~~
 
 On Apricot F1, it works with FAT12. However, you need to go to drive `C:`.
+Version for Apricot Xi uses CP/M disk format.
 
-### figure out if it's bootable on Xi
-Apricot PC/Xi shows Error 99 (disc is not bootable) straight away.
-Managed to build somehow bootable disk with the CP/M instead of MS-DOS by patching `apr00013.dsk`, only to find that `int FCh` is not available in ROM BIOS. 
+### how does it boot
+Apricot F-series has `int FCh` provided in ROM BIOS, therefore, `xios.cmd` (`aprixios.a86`) can be run as-is.
+
+Apricot Xi requires RAM BIOS to provide with high-level API. Original distribution has it embedded in `cpm3.sys`, another option would be using a parts of [_RAM BIOS VR2.6 APRICOT PC/XI_ sources](http://actapricot.org/disks/aprid5ks.htm#apr00203.dsk).
 
 ### annotate leftovers
 * [`cpm3.equ`](https://github.com/yottatsa/apricot-cpm86/blob/main/cpm3.equ#L14-L16)
