@@ -6,7 +6,7 @@ to build `BDOS` and `LOADER`
     -rw-r--r--  1 yottatsa  staff   1408 11 Jan 23:41 loader.cmd
     -rw-r--r--  1 yottatsa  staff  61184 11 Jan 23:41 new.sys
 
-to build `XIOS` from sources (or rebuild only xios part)
+to build DOS Plus 1.2 (CP/M-86 v4.1) modified `XIOS` from sources (or rebuild only xios part) instead of bundled 3.3:
 
     $ make BUILDXIOS=1 [ clean-xios all ] 
 
